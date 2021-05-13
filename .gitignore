@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/motion_photo_video_extractor/out/build/x64-Debug
+/motion_photo_video_extractor/.vs
