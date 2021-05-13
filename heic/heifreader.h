@@ -1,3 +1,5 @@
+// Copyright © 2021 Smbat Makiyan (a.k.a. idimus, a.k.a. simfeo). All rights reserved.
+
 #ifndef HEIFREADER_H
 #define HEIFREADER_H
 
