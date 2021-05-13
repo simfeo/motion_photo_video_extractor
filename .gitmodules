@@ -1,3 +1,9 @@
 [submodule "tinyxml2"]
 	path = tinyxml2
 	url = https://github.com/leethomason/tinyxml2
+[submodule "TinyEXIF"]
+	path = TinyEXIF
+	url = https://github.com/cdcseacave/TinyEXIF
+[submodule "argparse"]
+	path = argparse
+	url = https://github.com/hbristow/argparse

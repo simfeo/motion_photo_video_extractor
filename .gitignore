@@ -4,3 +4,6 @@
 
 /motion_photo_video_extractor/out/build/x64-Debug
 /motion_photo_video_extractor/.vs
+/.vs
+/out/build/x64-Debug
+/out/build/x64-Release
