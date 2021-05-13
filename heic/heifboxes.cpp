@@ -2,6 +2,9 @@
 
 #include "heifboxes.h"
 
+#define __STDC_WANT_LIB_EXT1__ 1
+#include <string.h>
+
 namespace HeifUtils
 {
     RamData::RamData(std::vector<uint8_t>& invec)
@@ -17,7 +20,7 @@ namespace HeifUtils
         , m_currentPos(0)
     {
         m_bufferVec.resize(len);
-        memcpy_s((void*)(&m_bufferVec[0]), len, buf, len);
+        memcpy((void*)(&m_bufferVec[0]), buf, len);
         m_buffer = &m_bufferVec[0];
     }
 

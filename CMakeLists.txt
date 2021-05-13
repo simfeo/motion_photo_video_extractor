@@ -5,6 +5,7 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("motion_photo_video_extractor" VERSION 1.0)
 
+set (CMAKE_CXX_STANDARD 11)
 
 include_directories (tinyxml2)
 include_directories (TinyEXIF)
@@ -14,7 +15,7 @@ include_directories (heic)
 
 # Local source files here
 SET(TARGET_SRC
-    TinyEXIF/TinyExif.cpp
+    TinyEXIF/TinyEXIF.cpp
     tinyxml2/tinyxml2.cpp
     heic/heifreader.cpp
     heic/heifboxes.cpp

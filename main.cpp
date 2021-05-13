@@ -81,7 +81,8 @@ int main(int argc, char** argv)
     std::string output_file = parser.retrieve<std::string>("output");
     std::string input_file_lower;
     input_file_lower.resize(input_file.size());
-    std::transform(input_file.begin(), input_file.end(), input_file_lower.begin(), std::tolower);
+    std::transform(input_file.begin(), input_file.end(), input_file_lower.begin(), 
+                                       [](unsigned char c) -> unsigned char { return std::tolower(c); });
 
     if ( !check_extension(input_file_lower, ".jpg")
         && !check_extension(input_file_lower, ".jpeg")
