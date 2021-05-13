@@ -91,28 +91,17 @@ int main(int argc, char** argv)
         return 3;
     }
 
-    std::shared_ptr<std::ifstream> imgFile(new std::ifstream(input_file.c_str(), std::ifstream::in | std::ifstream::binary), [](std::ifstream* p) {if (p) { p->close(), delete p; }});
-    if (imgFile->bad())
-    {
-        std::cerr << "cannot read input file" << std::endl;
-        return 3;
-    }
 
-    imgFile->seekg(0, std::ios::end);
-    std::streampos length = imgFile->tellg();
-    imgFile->seekg(0, std::ios::beg);
-    std::vector<uint8_t> data(length);
-    imgFile->read((char*)data.data(), length);
 
     if (check_extension(input_file_lower, ".heic"))
     {
-        if (imgFile->bad())
+        HeifReader heif;
+        if (HeifHelpers::OperationResult::Ok != heif.load(input_file.c_str()))
         {
-            imgFile.reset(new std::ifstream(input_file.c_str(), std::ifstream::in | std::ifstream::binary), [](std::ifstream* p) {if (p) { p->close(), delete p; }});
+            std::cerr << "cannot read input file" << std::endl;
+            return 3;
         }
 
-        HeifReader heif;
-        heif.load(*imgFile.get());
         SefdBox sf = heif.getSefdBox();
         if (sf.getSize() != 0
             && sf.getFtyp().getSize() != 0
@@ -123,12 +112,14 @@ int main(int argc, char** argv)
         {
             std::vector<uint8_t> videoData;
             videoData.resize(sf.getSize() - sf.getFtypStartPos());
+            std::shared_ptr<std::ifstream> imgFile(new std::ifstream(input_file.c_str(), std::ifstream::in | std::ifstream::binary), [](std::ifstream* p) {if (p) { p->close(), delete p; }});
             if (imgFile->bad())
             {
-                imgFile.reset(new std::ifstream(input_file.c_str(), std::ifstream::in | std::ifstream::binary), [](std::ifstream* p) {if (p) { p->close(), delete p; }});
+                std::cerr << "cannot read input file" << std::endl;
+                return 3;
             }
 
-            imgFile->seekg(heif.getSefdOffset() + sf.getMdat().startPosition());
+            imgFile->seekg(heif.getSefdOffset() + sf.getFtypStartPos());
             imgFile->read(reinterpret_cast<char*>(&videoData[0]), videoData.size());
             std::ofstream ofile(output_file.c_str(), std::ios::binary);
             if (ofile.bad())
@@ -139,9 +130,26 @@ int main(int argc, char** argv)
             ofile.write((char*)(videoData.data()), videoData.size());
             ofile.close();
         }
+        else
+        {
+            std::cerr << "there is no any video in this file" << std::endl;
+            return 4;
+        }
     }
     else
     {
+        std::shared_ptr<std::ifstream> imgFile(new std::ifstream(input_file.c_str(), std::ifstream::in | std::ifstream::binary), [](std::ifstream* p) {if (p) { p->close(), delete p; }});
+        if (imgFile->bad())
+        {
+            std::cerr << "cannot read input file" << std::endl;
+            return 3;
+        }
+        imgFile->seekg(0, std::ios::end);
+        std::streampos length = imgFile->tellg();
+        imgFile->seekg(0, std::ios::beg);
+        std::vector<uint8_t> data(length);
+        imgFile->read((char*)data.data(), length);
+
         auto exif_info = TinyEXIF::EXIFInfo(data.data(), length);
         if (exif_info.Fields)
         {
